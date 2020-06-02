@@ -1,0 +1,41 @@
+Once you have created the user name & password go with the 'Install Suggested Plugins". Once installtion finihsed then
+start adding nodes (slave-1 & slave-2 servers) on the Master Server.See the diagram (Ref: Jenkins Node)
+
+To add nodes we will follow jnlp protocol and in order to do so we will have to open the port on the master server so that
+it can communicate with the other servers (slave-1/slave-2). We can modify or add the security group only specific to the
+IP address or security group so that they can talk to each other.
+
+To add the slave-1/slave-2 servers as nodes to the Master server follow the below steps:
+
+Go to > Configure GLobal Security> Under Agent>'TCP port for inbound agents'> select 'Random'
+
+Go to > Configure GLobal Security> Manage Nodes> click 'New Node'> name it as 'slave-1'click Permanent agent >
+      > Assign value to 'Remote root directory'=/home/ubuntu/jenkins
+      > Launch method= select launch agnet by conenting it to the master
+      > click save
+      >click on 'New Node'>type slave-2 in the node name field>select 'copy existing node' to copy the settings
+       then assign value & other settings as we did for the slave-1
+
+Now follow the steps below to connect these nodes (slave-1/slave-2) to the master server as below:
+
+1. First click on the slave-1 node and once you are into this node you will see a command which will needed
+to be run on the master server. you'll need two files i. slave-agent.jnlp ii.agent.jar. Now click on the 'Launch'
+which will download the slave-agent.jnlp file and after that click on the 'agent.jar' to download. 
+So now these two files has to be present into the staging server.
+
+2. We will use filezilla (or mobiextream clinet app) to copy these file to the staging server.Put the staging server's public IP into the 'Host'
+and put 'ubuntu' to the username section. There is no password here, instead click on the 'edit'>settings>SFTP>add key file>
+then add the ppk for this server and you should be able to log into this server. Once you are logged in then simply drag and drop
+those two files (i. slave-agent.jnlp ii.agent.jar) and you are all set.
+
+3.Now go to your slave-1 server and check these copied files.in case you need to rename these files, simply use mv command to rename
+as needed.You can now copy the command from the stagin node and run it into the staging server.If all goes ok then you'll see connected
+into the terminal of your staging server and into the Jenkins you will see this staging node is conencted.
+
+4. Do the same steps for the slave-2 node as above.
+
+5.Both nodes are now conencted to the Master servers.
+
+
+
+ 

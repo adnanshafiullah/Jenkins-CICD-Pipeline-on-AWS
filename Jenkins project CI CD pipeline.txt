@@ -1,0 +1,54 @@
+Now we will create a project in Jenkins with Git & Docker to build our pipeline as below:
+
+>Get the project from: https://github.com/hshar/devopsIQ.git
+>Install docker on both slaves
+>Configure Jenkins to build project on Slave-1, if successful, should be built on Slave-2
+>Finally trigger the job using git web-hooks
+
+We'll be using Git & Docker in the pipeline.Git will have a code of one website that we will use to create a random website
+and it'll exists in git but we'll deploy that website by using docker.
+
+
+1.From jenkins homepage>click on New Item>create a free-style job by naming it as 'Test'
+2.Go to 'Test'job >Configure>select 'GitHub porject'>project url:https://github.com/adnanshafiullah/devopsIQ.git/
+3.Select 'Restrict where this project can be run> Label expression:Slave-1'
+4.Source Code Management> choose 'Git' > Repository URL: url:https://github.com/adnanshafiullah/devopsIQ.git/
+5.Build>Shell> sudo dockerrm -f $(sudo docker ps -a -q),sudo docker build /home/ubuntu/jenkins/workspace/Test -t test, sudo docker run -it -p 82:80 -d test
+6.Save and go to Jenkins dashboard and build this 'Test' job and see if it runs fine
+So, the Test job is giving us error as there's no container running in Slave-1 thats why it's not able to remove any container and hence we are getting 
+this error.
+So, we will run a random docker container in the slave-1 and then build this Test jb which will be successful.Now go to the slave-1 and 
+remove the running docker and then add a random docker container. Check on the browser to make sure that the website is not working.Build the
+Test job now and check the website again as it should be working now.
+8.Now create a new freestyle job called 'Prod'and add the above github url for this too ,restricting project by Slave-2
+9.on the Build> sudo docker rm -f $(sudo docker ps -a -q),sudo docker build /home/ubuntu/jenkins/workspace/Prod -t production,sudo docker run -it -p 80:80 -d production
+10.make sure to check that the website runs and before building this Prod job do not forget to run a random container on slave-2
+
+
+Now, we will go to the 'Test' job and> POst-build Actions>Build other projects> put Prod and select 'Trigger only if build is stable'. So, now
+we will run the Test job and if it succeeded then the Prod job will run.Install the plugin 'Build Pipeline' from Manage Jenkins.
+
+Go to dashboard and click on the + sign next to All & select 'Build Pipeline View'and name anything like CICD.Select 'Test' as initial job.
+
+Now go to deshboad and select the CICD tab and you will a pipeline from there run it and you will see that Test job first running and once it is
+finihsed then the Prod job will start.Both of the website should be running.
+
+Our final goal is that when we commit anything in github it'll trigger this CICD Jenkins pipeline job.To do so,we'll go to the Test job as it's
+upstream job followed by Prod job.Once we are into the Test job , select configure and under the 'Build Triggers', select>GitHub hook trigger for GITScm polling
+and save.
+
+Now go to your github url>select settings>click webhooks>Add webhooks>specify your jenkins web url with port# (http://3.85.175.187:8080 in my case)
+like> http://3.85.175.187:8080/github-webhook/ .
+
+If everything goes well there will be a green tick to this webhook link which means Jenkins was able to communicate and everything is working fine.
+
+Now we have to commit a change in the github repo and to do so we will get into the master server. we can do it from anywhere.we will first
+clone the repository >navigate to the folder where the 'index.html'>do some chnage here>now git add.>commit>push to repository.
+
+This is trigger the job on CICD jenkins pipeline and both the website will be changed as a result of git web-hook.
+
+
+
+
+
+

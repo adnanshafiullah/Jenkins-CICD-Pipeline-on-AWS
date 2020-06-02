@@ -1,0 +1,38 @@
+First of all I will update the Master,Staging & Production server and install the Jenkins on the Master Server only.
+To do so follow the below commands:
+
+1.sudo apt-get update (run on all servers)
+2.sudo apt install openjdk-8-jdk (run on all servrs to install Java)
+
+Now we will download the jenkins package on the Master server:
+(https://wiki.jenkins.io/display/JENKINS/Installing+Jenkins+on+Ubuntu)
+
+3.wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+
+Now to cache the repository into the sources of the operating system
+4.sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+
+Now update the server again:
+5.sudo apt-get update
+
+Now isntall Jenkins:
+
+6. sudo apt-get install jenkins
+
+Start Jenkins on the Master server & check status after that:
+
+7. sudo systemctl start jenkins
+   sudo systemctl status jenkins
+
+Now we will use the public IP address of the Master server to launch the Jenkins on a browser. Incase you see any error it means
+you will have to open the port 8080 to let traffic pass through. go to the security group of your master server and edit/modify
+the inbound rule (example: allow 'custome tcp rule', port '8080',source= any 0.0.0./0)then you'll be able to see jenkins working
+on a web browser.
+
+Now you will see a message on the browser to unlock the jenkins. just copy the path and cat it on the server to get the 
+secret password. once you have the password , put it on the web browser and continue.
+
+
+
+
+
